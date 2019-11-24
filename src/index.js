@@ -1,11 +1,65 @@
-import React from 'react';
+import React, { useContext, createContext } from 'react'
 
-const HelloSagittariux = () => {
-    return (
-        <div>Hello Sagittariux</div>
+// Combined reducers
+const useCombinedReducers = combinedReducers => {
+    const state = Object.keys(combinedReducers).reduce(
+        (acc, key) => ({ ...acc, [key]: combinedReducers[key][0] }), {},
     )
+
+    const dispatch = action =>
+        Object.keys(combinedReducers)
+            .map(key => combinedReducers[key][1])
+            .forEach(fn => fn(action));
+
+    return [state, dispatch]
+}
+
+
+// Context
+const StateContext = createContext()
+const DispatchContext = createContext()
+
+const SagittariuxState = ({ component: Component, dispatch, state }) => {
+
+    return (
+        <DispatchContext.Provider value={dispatch} >
+            <StateContext.Provider value={state}>
+                <Component />
+            </StateContext.Provider>
+        </DispatchContext.Provider>
+    )
+
+}
+
+// Provider
+const SagittariuxBlackHole = ({ component: Component, reducers }) => {
+
+    const [state, dispatch] = useCombinedReducers(reducers)
+
+    return <SagittariuxState component={Component} state={state} dispatch={dispatch} />
+}
+
+
+// State controllers
+const SagittariuxStatefull = ({ component: Component, ...rest }) => {
+
+    const state = useContext(StateContext);
+    const dispatch = useContext(DispatchContext);
+
+    return <Component state={state} dispatch={dispatch} {...rest} />
+
+}
+
+const SagittariuxStateless = ({ component: Component, ...rest }) => {
+
+    const state = useContext(StateContext);
+
+    return <Component state={state}  {...rest} />
+
 }
 
 export {
-    HelloSagittariux
+    SagittariuxBlackHole,
+    SagittariuxStatefull,
+    SagittariuxStateless
 }
