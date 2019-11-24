@@ -1,0 +1,35 @@
+{
+  "name": "sagittariux",
+  "version": "1.0.0",
+  "description": "Sagittarius is inspired by Redux, it is an open source React library to manage the state of the application through API-Context",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "./node_modules/.bin/babel src --out-file index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/imenesesl/sagittariux.git"
+  },
+  "keywords": [
+    "sagittariux"
+  ],
+  "author": "Luis Meneses",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/imenesesl/sagittariux/issues"
+  },
+  "homepage": "https://github.com/imenesesl/sagittariux#readme",
+  "peerDependencies": {
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0"
+  },
+  "dependencies": {
+    "@babel/cli": "^7.7.4",
+    "@babel/core": "^7.7.4",
+    "@babel/preset-env": "^7.7.4",
+    "@babel/preset-react": "^7.7.4",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0"
+  }
+}
