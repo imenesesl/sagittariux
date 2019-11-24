@@ -1,8 +1,37 @@
-import React, { useContext } from 'react'
-import useCombinedReducers from './use.combined.reducers'
-import { StateContext, DispatchContext } from './state.context'
-import SagittariuxState from './sagittariux.state'
+import React, { useContext, createContext } from 'react'
 
+// Combined reducers
+const useCombinedReducers = combinedReducers => {
+    const state = Object.keys(combinedReducers).reduce(
+        (acc, key) => ({ ...acc, [key]: combinedReducers[key][0] }), {},
+    )
+
+    const dispatch = action =>
+        Object.keys(combinedReducers)
+            .map(key => combinedReducers[key][1])
+            .forEach(fn => fn(action));
+
+    return [state, dispatch]
+}
+
+
+// Context
+const StateContext = createContext()
+const DispatchContext = createContext()
+
+const SagittariuxState = ({ component: Component, dispatch, state }) => {
+
+    return (
+        <DispatchContext.Provider value={dispatch} >
+            <StateContext.Provider value={state}>
+                <Component />
+            </StateContext.Provider>
+        </DispatchContext.Provider>
+    )
+
+}
+
+// Provider
 const SagittariuxBlackHole = ({ component: Component, reducers }) => {
 
     const [state, dispatch] = useCombinedReducers(reducers)
@@ -11,6 +40,7 @@ const SagittariuxBlackHole = ({ component: Component, reducers }) => {
 }
 
 
+// State controllers
 const SagittariuxStatefull = ({ component: Component, ...rest }) => {
 
     const state = useContext(StateContext);
