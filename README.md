@@ -50,6 +50,8 @@ This component can only access the state assigned to SagittariuxBlackHole and bu
 
 #### Example
 
+* Before
+
 ```jsx
 const CounterController = ({ state }) => {
 
@@ -61,6 +63,19 @@ const CounterController = ({ state }) => {
 const CounterView = ({ ...rest }) => <SagittariuxStateless component={CounterController} {...rest} />
 
 export default CounterView
+```
+
+* Now
+
+```jsx
+const CounterController = ({ state }) => {
+
+    const { counter } = state
+
+    return <span>Counter: {counter.counter}</span>
+}
+
+export default SagittariuxStateless(CounterController)
 ```
 
 * ## SagittariuxStatefull :fire:
@@ -83,6 +98,8 @@ This component unlike SagittariuxStateless can access the state and dispatch ass
 
 #### Example
 
+* Before
+
 ```jsx
 const CounterController = ({ state, dispatch }) => {
 
@@ -101,19 +118,31 @@ const CounterView = ({ ...rest }) => <SagittariuxStatefull component={CounterCon
 
 export default CounterView
 ```
+
+* Now
+
+```jsx
+const CounterController = ({ state, dispatch }) => {
+
+    const { counter } = state
+    const increment = () => dispatch(updateIncrementCounter())
+
+    return (
+        <>
+            <span>Counter: {counter.counter}</span>
+            <button onClick={increment}>Increment</button>
+        </>
+    )
+}
+
+export default SagittariuxStatefull(CounterController)
+```
+
 ## Get Started :rocket:
 
 * Add the following in the dependencies of your package.json
-```json
-    "dependencies": {
-        ...
-        "sagittariux": "github:imenesesl/sagittariux#master"
-    }
-```
-
-* Update the modules
 ```bash
-npm install
+npm install sagittariux
 ```
 
 * Ready to use 

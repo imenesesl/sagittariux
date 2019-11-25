@@ -41,20 +41,40 @@ const SagittariuxBlackHole = ({ component: Component, reducers }) => {
 
 
 // State controllers
-const SagittariuxStatefull = ({ component: Component, ...rest }) => {
+const SagittariuxStatefull = (Component) => {
 
-    const state = useContext(StateContext);
-    const dispatch = useContext(DispatchContext);
+    const Wrap = ({ ...rest }) => {
 
-    return <Component state={state} dispatch={dispatch} {...rest} />
+        const stateContext = useContext(StateContext);
+        const dispatchContext = useContext(DispatchContext)
 
+        return <Component state={stateContext} dispatch={dispatchContext} {...rest} />
+    }
+
+    return class extends React.Component {
+
+        render() {
+            return <Wrap {...this.props} />
+        }
+    }
 }
 
-const SagittariuxStateless = ({ component: Component, ...rest }) => {
 
-    const state = useContext(StateContext);
+const SagittariuxStateless = (Component) => {
 
-    return <Component state={state}  {...rest} />
+    const Wrap = ({ ...rest }) => {
+
+        const stateContext = useContext(StateContext)
+
+        return <Component state={stateContext} {...rest} />
+    }
+
+    return class extends React.Component {
+
+        render() {
+            return <Wrap {...this.props} />
+        }
+    }
 
 }
 
