@@ -104,3 +104,20 @@ npm install sagittariux
 ```jsx
 import { SagittariuxBlackHole, SagittariuxStateless, SagittariuxStatefull } from 'sagittariux'
 ```
+
+## Run Demo :shipit:
+
+* Clone this repository
+```bash
+git clone https://github.com/imenesesl/sagittariux.git
+```
+
+* Execute the following line
+```bash
+npm i
+```
+
+* Run demo
+```bash
+npm run demo
+```
