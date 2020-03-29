@@ -21,14 +21,20 @@ The `reducersObject` object can only be built within a React component
 ```jsx
 const App = () => {
     const reducers = {
-        app: useReducer(reducerApp, initialStateApp),
-        counter: useReducer(reducerCounter, initialStateCounter),
-    }
+        test: useReducer(testReducer, initialStateTest)
+    };
+    return (
+        <SagittariuxBlackHole
+            reducers={reducers} >
+            <div className='principal-container' >
+                <LeftContainer />
+                <RightContainer />
+            </div>
+        </ SagittariuxBlackHole>
+    );
+};
 
-    return < SagittariuxBlackHole component={NodeApp} reducers={reducers} />
-}
-
-export default App
+export default App;
 
 ```
 
@@ -40,42 +46,20 @@ This component can only access the state assigned to SagittariuxBlackHole and bu
 
 `state`: Object with the different access keys to the previous reducers assigned to SagittariuxBlackHole
 
-`component={NameComponentController}`: Heir component
-
-#### Structure
-
-`NameComponentController`: Heir component that will have access to the state
-
-`NameComponent`: Representative component
-
 #### Example
-
-* Before
-
-```jsx
-const CounterController = ({ state }) => {
-
-    const { counter } = state
-
-    return <span>Counter: {counter.counter}</span>
-}
-
-const CounterView = ({ ...rest }) => <SagittariuxStateless component={CounterController} {...rest} />
-
-export default CounterView
-```
 
 * Now
 
 ```jsx
-const CounterController = ({ state }) => {
+const LeftContainer = (props) => {
+    return (
+        <div className='view-container letf-container'>
+            {props.state.test.counter}
+        </div>
+    );
+};
 
-    const { counter } = state
-
-    return <span>Counter: {counter.counter}</span>
-}
-
-export default SagittariuxStateless(CounterController)
+export default SagittariuxStateless(LeftContainer);
 ```
 
 * ## SagittariuxStatefull :fire:
@@ -88,54 +72,25 @@ This component unlike SagittariuxStateless can access the state and dispatch ass
 
 `dispatch`: Function that receives an action as a parameter, this action is directly associated with the state to be modified by reducing
 
-`component={NameComponentController}`: Heir component
-
-#### Structure
-
-`NameComponentController`: Heir component that will have access to the status and dispatch
-
-`NameComponent`: Representative component
-
 #### Example
-
-* Before
-
-```jsx
-const CounterController = ({ state, dispatch }) => {
-
-    const { counter } = state
-    const increment = () => dispatch(updateIncrementCounter())
-
-    return (
-        <>
-            <span>Counter: {counter.counter}</span>
-            <button onClick={increment}>Increment</button>
-        </>
-    )
-}
-
-const CounterView = ({ ...rest }) => <SagittariuxStatefull component={CounterController} {...rest} />
-
-export default CounterView
-```
 
 * Now
 
 ```jsx
-const CounterController = ({ state, dispatch }) => {
-
-    const { counter } = state
-    const increment = () => dispatch(updateIncrementCounter())
-
+const RightContainer = (props) => {
     return (
-        <>
-            <span>Counter: {counter.counter}</span>
-            <button onClick={increment}>Increment</button>
-        </>
-    )
-}
+        <div className='view-container right-container'>
+            <button onClick={() => props.dispatch(addAction(1))} >
+                ADD
+            </button>
+            <button onClick={() => props.dispatch(substractAction(1))} >
+                SUBSTRACT
+            </button>
+        </div>
+    );
+};
 
-export default SagittariuxStatefull(CounterController)
+export default SagittariuxStatefull(RightContainer);
 ```
 
 ## Get Started :rocket:

@@ -1,0 +1,51 @@
+body {
+    margin: 0;
+}
+
+button {
+    cursor: pointer;
+    border-radius: 9px;
+    margin: 3px;
+    height: 56px;
+    width: 150px;
+    font-weight: bold;
+    color: white;
+    border-width: 0;
+    font-size: 14px;
+    background-color: rgb(103, 103, 255)
+}
+
+button:focus {
+    outline: 0;
+}
+
+button:hover {
+    background-color: rgb(71, 71, 255)
+}
+
+button:active {
+    background-color: rgb(30, 30, 185)
+}
+
+.view-container {
+    width: 50%;
+    display: flex;
+    color: white;
+    font-size: 100px;
+    align-items: center;
+    justify-content: center;
+}
+
+.letf-container {
+    background-color: rgb(255, 169, 169);
+}
+
+.right-container {
+    background-color: rgb(167, 167, 255);
+}
+
+.principal-container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+}

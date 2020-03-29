@@ -1,82 +1,81 @@
-import React, { useContext, createContext } from 'react'
+import React, { useContext, createContext } from 'react';
 
-// Combined reducers
+const StateContext = createContext();
+const DispatchContext = createContext();
+
 const useCombinedReducers = combinedReducers => {
-    const state = Object.keys(combinedReducers).reduce(
-        (acc, key) => ({ ...acc, [key]: combinedReducers[key][0] }), {},
-    )
-
+    const state = Object
+        .keys(combinedReducers)
+        .reduce((acc, key) => ({ ...acc, [key]: combinedReducers[key][0] }), {});
     const dispatch = action =>
-        Object.keys(combinedReducers)
+        Object
+            .keys(combinedReducers)
             .map(key => combinedReducers[key][1])
             .forEach(fn => fn(action));
+    return [state, dispatch];
+};
 
-    return [state, dispatch]
-}
-
-
-// Context
-const StateContext = createContext()
-const DispatchContext = createContext()
-
-const SagittariuxState = ({ component: Component, dispatch, state }) => {
-
+const SagittariuxState = ({ children, dispatch, state }) => {
     return (
         <DispatchContext.Provider value={dispatch} >
             <StateContext.Provider value={state}>
-                <Component />
+                {children}
             </StateContext.Provider>
         </DispatchContext.Provider>
-    )
+    );
+};
 
-}
+const SagittariuxBlackHole = ({ children, reducers }) => {
+    const [state, dispatch] = useCombinedReducers(reducers);
+    return (
+        <SagittariuxState
+            state={state}
+            dispatch={dispatch} >
+            {children}
+        </SagittariuxState>
+    );
+};
 
-// Provider
-const SagittariuxBlackHole = ({ component: Component, reducers }) => {
-
-    const [state, dispatch] = useCombinedReducers(reducers)
-
-    return <SagittariuxState component={Component} state={state} dispatch={dispatch} />
-}
-
-
-// State controllers
 const SagittariuxStatefull = (Component) => {
-
-    const Wrap = ({ ...rest }) => {
-
+    const Statefull = ({ ...rest }) => {
         const stateContext = useContext(StateContext);
-        const dispatchContext = useContext(DispatchContext)
-
-        return <Component state={stateContext} dispatch={dispatchContext} {...rest} />
-    }
-
+        const dispatchContext = useContext(DispatchContext);
+        return (
+            <Component
+                state={stateContext}
+                dispatch={dispatchContext}
+                {...rest} />
+        );
+    };
     return class extends React.Component {
-
         render() {
-            return <Wrap {...this.props} />
-        }
-    }
-}
+            return (
+                <Statefull
+                    {...this.props} />
+            );
+        };
+    };
+};
 
 
 const SagittariuxStateless = (Component) => {
-
-    const Wrap = ({ ...rest }) => {
-
-        const stateContext = useContext(StateContext)
-
-        return <Component state={stateContext} {...rest} />
-    }
-
+    const Stateless = ({ ...rest }) => {
+        const stateContext = useContext(StateContext);
+        return (
+            <Component
+                state={stateContext}
+                {...rest} />
+        );
+    };
     return class extends React.Component {
-
         render() {
-            return <Wrap {...this.props} />
-        }
-    }
-
-}
+            return (
+                <Stateless
+                    {...this.props} />
+            );
+        };
+    };
+};
 
 export {
     SagittariuxBlackHole,
