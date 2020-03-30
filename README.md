@@ -8,13 +8,11 @@ This component is in charge of managing the state of all their children in the t
 
 #### Params
 
-`component={PrincipalComponent}`: State representative component
-
 `reducers={reducersObject}`: Object that will contain the different states, these objects are segmented by reducers
 
 #### Warning
 
-The `reducersObject` object can only be built within a React component
+The `reducers` object can only be built within a React component
 
 #### Example
 
@@ -48,8 +46,6 @@ This component can only access the state assigned to SagittariuxBlackHole and bu
 
 #### Example
 
-* Now
-
 ```jsx
 const LeftContainer = (props) => {
     return (
@@ -73,8 +69,6 @@ This component unlike SagittariuxStateless can access the state and dispatch ass
 `dispatch`: Function that receives an action as a parameter, this action is directly associated with the state to be modified by reducing
 
 #### Example
-
-* Now
 
 ```jsx
 const RightContainer = (props) => {
