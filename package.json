@@ -10,8 +10,7 @@
     "publish": "npm run build && npm publish --access public"
   },
   "repository": {
-    "type": "git",
-    "url": "git+https://github.com/imenesesl/sagittariux.git"
+    "url": "git://github.com/imenesesl/sagittariux.git"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
