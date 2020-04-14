@@ -1,23 +1,23 @@
 
 import React, { useReducer } from 'react';
 import { testReducer, initialStateTest } from './reducers'
-import { SagittariuxBlackHole } from '../src';
+import { Provider } from '../src';
 import RightContainer from './containers/Right';
 import LeftContainer from './containers/Left';
 import './style.css';
 
 const App = () => {
-    const reducers = {
+    const store = {
         test: useReducer(testReducer, initialStateTest)
     };
     return (
-        <SagittariuxBlackHole
-            reducers={reducers} >
+        <Provider
+            store={store} >
             <div className='principal-container' >
                 <LeftContainer />
                 <RightContainer />
             </div>
-        </ SagittariuxBlackHole>
+        </ Provider>
     );
 };
 

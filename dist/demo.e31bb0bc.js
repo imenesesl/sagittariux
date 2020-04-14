@@ -28353,7 +28353,7 @@ exports.substractAction = substractAction;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.SagittariuxStateless = exports.SagittariuxStatefull = exports.SagittariuxBlackHole = void 0;
+exports.useConnect = exports.Provider = void 0;
 
 var _react = _interopRequireWildcard(require("react"));
 
@@ -28407,7 +28407,7 @@ var StateContext = (0, _react.createContext)();
 var DispatchContext = (0, _react.createContext)();
 
 var useCombinedReducers = function useCombinedReducers(combinedReducers) {
-  var state = Object.keys(combinedReducers).reduce(function (acc, key) {
+  var store = Object.keys(combinedReducers).reduce(function (acc, key) {
     return _objectSpread({}, acc, _defineProperty({}, key, combinedReducers[key][0]));
   }, {});
 
@@ -28419,45 +28419,45 @@ var useCombinedReducers = function useCombinedReducers(combinedReducers) {
     });
   };
 
-  return [state, dispatch];
+  return [store, dispatch];
 };
 
-var SagittariuxState = function SagittariuxState(_ref) {
+var ContextProvider = function ContextProvider(_ref) {
   var children = _ref.children,
       dispatch = _ref.dispatch,
-      state = _ref.state;
+      store = _ref.store;
   return /*#__PURE__*/_react.default.createElement(DispatchContext.Provider, {
     value: dispatch
   }, /*#__PURE__*/_react.default.createElement(StateContext.Provider, {
-    value: state
+    value: store
   }, children));
 };
 
-var SagittariuxBlackHole = function SagittariuxBlackHole(_ref2) {
+var Provider = function Provider(_ref2) {
   var children = _ref2.children,
-      reducers = _ref2.reducers;
+      store = _ref2.store;
 
-  var _useCombinedReducers = useCombinedReducers(reducers),
+  var _useCombinedReducers = useCombinedReducers(store),
       _useCombinedReducers2 = _slicedToArray(_useCombinedReducers, 2),
       state = _useCombinedReducers2[0],
       dispatch = _useCombinedReducers2[1];
 
-  return /*#__PURE__*/_react.default.createElement(SagittariuxState, {
-    state: state,
+  return /*#__PURE__*/_react.default.createElement(ContextProvider, {
+    store: state,
     dispatch: dispatch
   }, children);
 };
 
-exports.SagittariuxBlackHole = SagittariuxBlackHole;
+exports.Provider = Provider;
 
-var SagittariuxStatefull = function SagittariuxStatefull(Component) {
-  var Statefull = function Statefull(_ref3) {
+var useConnect = function useConnect(Component) {
+  var Connect = function Connect(_ref3) {
     var rest = Object.assign({}, _ref3);
-    var stateContext = (0, _react.useContext)(StateContext);
-    var dispatchContext = (0, _react.useContext)(DispatchContext);
+    var store = (0, _react.useContext)(StateContext);
+    var dispatch = (0, _react.useContext)(DispatchContext);
     return /*#__PURE__*/_react.default.createElement(Component, _extends({
-      state: stateContext,
-      dispatch: dispatchContext
+      store: store,
+      dispatch: dispatch
     }, rest));
   };
 
@@ -28475,7 +28475,7 @@ var SagittariuxStatefull = function SagittariuxStatefull(Component) {
     _createClass(_class, [{
       key: "render",
       value: function render() {
-        return /*#__PURE__*/_react.default.createElement(Statefull, this.props);
+        return /*#__PURE__*/_react.default.createElement(Connect, this.props);
       }
     }]);
 
@@ -28483,40 +28483,7 @@ var SagittariuxStatefull = function SagittariuxStatefull(Component) {
   }(_react.default.Component);
 };
 
-exports.SagittariuxStatefull = SagittariuxStatefull;
-
-var SagittariuxStateless = function SagittariuxStateless(Component) {
-  var Stateless = function Stateless(_ref4) {
-    var rest = Object.assign({}, _ref4);
-    var stateContext = (0, _react.useContext)(StateContext);
-    return /*#__PURE__*/_react.default.createElement(Component, _extends({
-      state: stateContext
-    }, rest));
-  };
-
-  return /*#__PURE__*/function (_React$Component2) {
-    _inherits(_class2, _React$Component2);
-
-    var _super2 = _createSuper(_class2);
-
-    function _class2() {
-      _classCallCheck(this, _class2);
-
-      return _super2.apply(this, arguments);
-    }
-
-    _createClass(_class2, [{
-      key: "render",
-      value: function render() {
-        return /*#__PURE__*/_react.default.createElement(Stateless, this.props);
-      }
-    }]);
-
-    return _class2;
-  }(_react.default.Component);
-};
-
-exports.SagittariuxStateless = SagittariuxStateless;
+exports.useConnect = useConnect;
 },{"react":"../node_modules/react/index.js"}],"containers/Right.js":[function(require,module,exports) {
 "use strict";
 
@@ -28547,7 +28514,7 @@ var RightContainer = function RightContainer(props) {
   }, "SUBSTRACT"));
 };
 
-var _default = (0, _src.SagittariuxStatefull)(RightContainer);
+var _default = (0, _src.useConnect)(RightContainer);
 
 exports.default = _default;
 },{"react":"../node_modules/react/index.js","../../src":"../src/index.js","../reducers":"reducers/index.js"}],"containers/Left.js":[function(require,module,exports) {
@@ -28567,10 +28534,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var LeftContainer = function LeftContainer(props) {
   return /*#__PURE__*/_react.default.createElement("div", {
     className: "view-container letf-container"
-  }, props.state.test.counter);
+  }, props.store.test.counter);
 };
 
-var _default = (0, _src.SagittariuxStateless)(LeftContainer);
+var _default = (0, _src.useConnect)(LeftContainer);
 
 exports.default = _default;
 },{"react":"../node_modules/react/index.js","../../src":"../src/index.js"}],"../node_modules/parcel/src/builtins/bundle-url.js":[function(require,module,exports) {
@@ -28672,11 +28639,11 @@ function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 var App = function App() {
-  var reducers = {
+  var store = {
     test: (0, _react.useReducer)(_reducers.testReducer, _reducers.initialStateTest)
   };
-  return /*#__PURE__*/_react.default.createElement(_src.SagittariuxBlackHole, {
-    reducers: reducers
+  return /*#__PURE__*/_react.default.createElement(_src.Provider, {
+    store: store
   }, /*#__PURE__*/_react.default.createElement("div", {
     className: "principal-container"
   }, /*#__PURE__*/_react.default.createElement(_Left.default, null), /*#__PURE__*/_react.default.createElement(_Right.default, null)));
@@ -28724,7 +28691,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49779" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62461" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

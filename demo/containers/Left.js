@@ -1,12 +1,12 @@
 import React from 'react';
-import { SagittariuxStateless } from '../../src';
+import { useConnect } from '../../src';
 
 const LeftContainer = (props) => {
     return (
         <div className='view-container letf-container'>
-            {props.state.test.counter}
+            {props.store.test.counter}
         </div>
     );
 };
 
-export default SagittariuxStateless(LeftContainer);
+export default useConnect(LeftContainer);

@@ -1,5 +1,5 @@
 import React from 'react';
-import { SagittariuxStatefull } from '../../src';
+import { useConnect } from '../../src';
 import { addAction, substractAction } from '../reducers'
 
 const RightContainer = (props) => {
@@ -15,4 +15,4 @@ const RightContainer = (props) => {
     );
 };
 
-export default SagittariuxStatefull(RightContainer);
+export default useConnect(RightContainer);

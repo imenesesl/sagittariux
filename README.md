@@ -1,34 +1,35 @@
 ## Sagitttariux 
 
-This project aims to have a default structure for state management, something similar to Redux but using Hooks
+This project aims to have a default structure for state management
 
-* ## SagittariuxBlackHole :milky_way:
+* ## Provider :milky_way:
 
 This component is in charge of managing the state of all their children in the tree, to manage a general state of the entire application it is recommended to add it at the top of the gerarchy
 
 #### Params
 
-`reducers={reducersObject}`: Object that will contain the different states, these objects are segmented by reducers
+`store`: Object that will contain the different stores, these objects are segmented by reducers
+`children`: Displayed whatever you include between the opening and closing tags when invoking a component
 
 #### Warning
 
-The `reducers` object can only be built within a React component
+The `store` object can only be built within a React component
 
 #### Example
 
 ```jsx
 const App = () => {
-    const reducers = {
+    const store = {
         test: useReducer(testReducer, initialStateTest)
     };
     return (
-        <SagittariuxBlackHole
-            reducers={reducers} >
+        <Provider
+            store={store} >
             <div className='principal-container' >
                 <LeftContainer />
                 <RightContainer />
             </div>
-        </ SagittariuxBlackHole>
+        </ Provider>
     );
 };
 
@@ -36,37 +37,11 @@ export default App;
 
 ```
 
-* ## SagittariuxStateless :zzz:
+## useConnect :fire:
 
-This component can only access the state assigned to SagittariuxBlackHole and built by SagittariuxState
+`dispatch`: Function that receives an action as a parameter, this action is directly associated with the store to be modified by reducing
 
-#### Inherited Parameters
-
-`state`: Object with the different access keys to the previous reducers assigned to SagittariuxBlackHole
-
-#### Example
-
-```jsx
-const LeftContainer = (props) => {
-    return (
-        <div className='view-container letf-container'>
-            {props.state.test.counter}
-        </div>
-    );
-};
-
-export default SagittariuxStateless(LeftContainer);
-```
-
-* ## SagittariuxStatefull :fire:
-
-This component unlike SagittariuxStateless can access the state and dispatch assigned to SagittariuxBlackHole and built by SagittariuxState
-
-#### Inherited Parameters
-
-`state`: Object with the different access keys to the previous reducers assigned to SagittariuxBlackHole
-
-`dispatch`: Function that receives an action as a parameter, this action is directly associated with the state to be modified by reducing
+`store`: Object with the different access keys to the previous stores assigned to Provider
 
 #### Example
 
@@ -80,11 +55,14 @@ const RightContainer = (props) => {
             <button onClick={() => props.dispatch(substractAction(1))} >
                 SUBSTRACT
             </button>
+            <div className='view-container letf-container'>
+                {props.store.test.counter}
+            </div>
         </div>
     );
 };
 
-export default SagittariuxStatefull(RightContainer);
+export default useConnect(RightContainer);
 ```
 
 ## Get Started :rocket:
@@ -96,7 +74,7 @@ npm install sagittariux
 
 * Ready to use 
 ```jsx
-import { SagittariuxBlackHole, SagittariuxStateless, SagittariuxStatefull } from 'sagittariux'
+import { Provider, useConnect } from 'sagittariux'
 ```
 
 ## Run Demo :shipit:
