@@ -1,6 +1,6 @@
 {
   "name": "@imenesesl/sagittariux",
-  "version": "2.1.2",
+  "version": "2.1.3",
   "description": "Sagittarius is inspired by Redux, it is an open source React library to manage the state of the application through API-Context",
   "main": "index.js",
   "scripts": {

@@ -28422,41 +28422,31 @@ var useCombinedReducers = function useCombinedReducers(combinedReducers) {
   return [state, dispatch];
 };
 
-var ContextProvider = function ContextProvider(_ref) {
+var Provider = function Provider(_ref) {
   var children = _ref.children,
-      dispatch = _ref.dispatch,
       store = _ref.store;
-  return /*#__PURE__*/_react.default.createElement(DispatchContext.Provider, {
-    value: dispatch
-  }, /*#__PURE__*/_react.default.createElement(StateContext.Provider, {
-    value: store
-  }, children));
-};
-
-var Provider = function Provider(_ref2) {
-  var children = _ref2.children,
-      store = _ref2.store;
 
   var _useCombinedReducers = useCombinedReducers(store),
       _useCombinedReducers2 = _slicedToArray(_useCombinedReducers, 2),
       state = _useCombinedReducers2[0],
       dispatch = _useCombinedReducers2[1];
 
-  return /*#__PURE__*/_react.default.createElement(ContextProvider, {
-    store: state,
-    dispatch: dispatch
-  }, children);
+  return /*#__PURE__*/_react.default.createElement(DispatchContext.Provider, {
+    value: dispatch
+  }, /*#__PURE__*/_react.default.createElement(StateContext.Provider, {
+    value: state
+  }, children));
 };
 
 exports.Provider = Provider;
 
 var useConnect = function useConnect(Component) {
-  var Connect = function Connect(_ref3) {
-    var rest = Object.assign({}, _ref3);
+  var Connect = function Connect(_ref2) {
+    var rest = Object.assign({}, _ref2);
     return /*#__PURE__*/_react.default.createElement(DispatchConsumer, null, function (dispatch) {
-      return /*#__PURE__*/_react.default.createElement(StateConsumer, null, function (store) {
+      return /*#__PURE__*/_react.default.createElement(StateConsumer, null, function (state) {
         return /*#__PURE__*/_react.default.createElement(Component, _extends({
-          store: store,
+          store: state,
           dispatch: dispatch
         }, rest));
       });

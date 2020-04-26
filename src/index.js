@@ -17,20 +17,13 @@ const useCombinedReducers = (combinedReducers) => {
   return [state, dispatch];
 };
 
-const ContextProvider = ({ children, dispatch, store }) => {
-  return (
-    <DispatchContext.Provider value={dispatch}>
-      <StateContext.Provider value={store}>{children}</StateContext.Provider>
-    </DispatchContext.Provider>
-  );
-};
-
 const Provider = ({ children, store }) => {
   const [state, dispatch] = useCombinedReducers(store);
+
   return (
-    <ContextProvider store={state} dispatch={dispatch}>
-      {children}
-    </ContextProvider>
+    <DispatchContext.Provider value={dispatch}>
+      <StateContext.Provider value={state}>{children}</StateContext.Provider>
+    </DispatchContext.Provider>
   );
 };
 
@@ -40,8 +33,8 @@ const useConnect = (Component) => {
       <DispatchConsumer>
         {(dispatch) => (
           <StateConsumer>
-            {(store) => (
-              <Component store={store} dispatch={dispatch} {...rest} />
+            {(state) => (
+              <Component store={state} dispatch={dispatch} {...rest} />
             )}
           </StateConsumer>
         )}
