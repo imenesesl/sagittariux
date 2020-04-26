@@ -28369,6 +28369,10 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
 function _createSuper(Derived) { return function () { var Super = _getPrototypeOf(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
@@ -28378,10 +28382,6 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
@@ -28404,10 +28404,12 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 var StateContext = (0, _react.createContext)();
+var StateConsumer = StateContext.Consumer;
 var DispatchContext = (0, _react.createContext)();
+var DispatchConsumer = DispatchContext.Consumer;
 
 var useCombinedReducers = function useCombinedReducers(combinedReducers) {
-  var store = Object.keys(combinedReducers).reduce(function (acc, key) {
+  var state = Object.keys(combinedReducers).reduce(function (acc, key) {
     return _objectSpread({}, acc, _defineProperty({}, key, combinedReducers[key][0]));
   }, {});
 
@@ -28419,7 +28421,7 @@ var useCombinedReducers = function useCombinedReducers(combinedReducers) {
     });
   };
 
-  return [store, dispatch];
+  return [state, dispatch];
 };
 
 var ContextProvider = function ContextProvider(_ref) {
@@ -28453,12 +28455,14 @@ exports.Provider = Provider;
 var useConnect = function useConnect(Component) {
   var Connect = function Connect(_ref3) {
     var rest = Object.assign({}, _ref3);
-    var store = (0, _react.useContext)(StateContext);
-    var dispatch = (0, _react.useContext)(DispatchContext);
-    return /*#__PURE__*/_react.default.createElement(Component, _extends({
-      store: store,
-      dispatch: dispatch
-    }, rest));
+    return /*#__PURE__*/_react.default.createElement(DispatchConsumer, null, function (dispatch) {
+      return /*#__PURE__*/_react.default.createElement(StateConsumer, null, function (store) {
+        return /*#__PURE__*/_react.default.createElement(Component, _extends({
+          store: store,
+          dispatch: dispatch
+        }, rest));
+      });
+    });
   };
 
   return /*#__PURE__*/function (_React$Component) {
@@ -28500,7 +28504,7 @@ var _reducers = require("../reducers");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var RightContainer = function RightContainer(props) {
+var RightContainer = _react.default.memo(function (props) {
   return /*#__PURE__*/_react.default.createElement("div", {
     className: "view-container right-container"
   }, /*#__PURE__*/_react.default.createElement("button", {
@@ -28512,7 +28516,7 @@ var RightContainer = function RightContainer(props) {
       return props.dispatch((0, _reducers.substractAction)(1));
     }
   }, "SUBSTRACT"));
-};
+});
 
 var _default = (0, _src.useConnect)(RightContainer);
 
@@ -28531,11 +28535,11 @@ var _src = require("../../src");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var LeftContainer = function LeftContainer(props) {
+var LeftContainer = _react.default.memo(function (props) {
   return /*#__PURE__*/_react.default.createElement("div", {
     className: "view-container letf-container"
-  }, props.store.test.counter);
-};
+  }, /*#__PURE__*/_react.default.createElement("span", null, props.store.test.counter, " "));
+});
 
 var _default = (0, _src.useConnect)(LeftContainer);
 
@@ -28691,7 +28695,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62461" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62906" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
