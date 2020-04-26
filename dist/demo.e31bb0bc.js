@@ -28299,8 +28299,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-var ADD_COUNTER_ACTION = 'ADD_COUNTER_ACTION';
-var SUBSTRACT_COUNTER_ACTION = 'SUBSTRACT_COUNTER_ACTION';
+var ADD_COUNTER_ACTION = "ADD_COUNTER_ACTION";
+var SUBSTRACT_COUNTER_ACTION = "SUBSTRACT_COUNTER_ACTION";
 var initialStateTest = {
   counter: 0
 };
@@ -28322,10 +28322,8 @@ var testReducer = function testReducer(state, action) {
       });
 
     default:
-      throw new Error('Action no valid');
+      throw new Error("Action no valid");
   }
-
-  ;
 };
 
 exports.testReducer = testReducer;
@@ -28666,7 +28664,7 @@ var _App = _interopRequireDefault(require("./App"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-_reactDom.default.render( /*#__PURE__*/_react.default.createElement(_App.default, null), document.getElementById('root'));
+_reactDom.default.render( /*#__PURE__*/_react.default.createElement(_App.default, null), document.getElementById("root"));
 },{"react":"../node_modules/react/index.js","react-dom":"../node_modules/react-dom/index.js","./App":"App.js"}],"../node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
