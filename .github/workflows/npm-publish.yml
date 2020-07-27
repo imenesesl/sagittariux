@@ -19,8 +19,6 @@ jobs:
           git config user.name "Actions User"
           git config user.email noreply@github.com
           npm version 1.0.$(date +%s)
-          npm install
-          npm run build
 
       # Publish to NPMJS
       - uses: actions/setup-node@master
@@ -32,6 +30,8 @@ jobs:
           npm config set //registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN
           npm config set scope "@imenesesl"
           npm config list
+          npm install
+          npm run build
           npm publish --access public
         env:
           CI: true
@@ -46,4 +46,4 @@ jobs:
       - name: Publish to GitHub Package Registry
         run: npm publish
         env:
-          NODE_AUTH_TOKEN: ${{secrets.GIT_TOKEN}}
+          NODE_AUTH_TOKEN: ${{github.token}}
