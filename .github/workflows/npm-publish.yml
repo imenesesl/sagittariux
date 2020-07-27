@@ -19,6 +19,8 @@ jobs:
           git config user.name "Actions User"
           git config user.email noreply@github.com
           npm version 1.0.$(date +%s)
+          npm install
+          npm run build
 
       # Publish to NPMJS
       - uses: actions/setup-node@master
