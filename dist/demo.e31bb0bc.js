@@ -28312,12 +28312,12 @@ var testReducer = function testReducer(state, action) {
 
   switch (type) {
     case ADD_COUNTER_ACTION:
-      return _objectSpread({}, state, {
+      return _objectSpread(_objectSpread({}, state), {}, {
         counter: state.counter + payload
       });
 
     case SUBSTRACT_COUNTER_ACTION:
-      return _objectSpread({}, state, {
+      return _objectSpread(_objectSpread({}, state), {}, {
         counter: state.counter - payload
       });
 
@@ -28351,7 +28351,7 @@ exports.substractAction = substractAction;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.useConnect = exports.Provider = void 0;
+exports.connect = exports.Provider = void 0;
 
 var _react = _interopRequireWildcard(require("react"));
 
@@ -28371,7 +28371,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-function _createSuper(Derived) { return function () { var Super = _getPrototypeOf(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
@@ -28387,7 +28387,7 @@ function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArra
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
@@ -28401,14 +28401,14 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-var StateContext = (0, _react.createContext)();
+var StateContext = /*#__PURE__*/(0, _react.createContext)();
 var StateConsumer = StateContext.Consumer;
-var DispatchContext = (0, _react.createContext)();
+var DispatchContext = /*#__PURE__*/(0, _react.createContext)();
 var DispatchConsumer = DispatchContext.Consumer;
 
-var useCombinedReducers = function useCombinedReducers(combinedReducers) {
+var combineReducers = function combineReducers(combinedReducers) {
   var state = Object.keys(combinedReducers).reduce(function (acc, key) {
-    return _objectSpread({}, acc, _defineProperty({}, key, combinedReducers[key][0]));
+    return _objectSpread(_objectSpread({}, acc), {}, _defineProperty({}, key, combinedReducers[key][0]));
   }, {});
 
   var dispatch = function dispatch(action) {
@@ -28422,14 +28422,26 @@ var useCombinedReducers = function useCombinedReducers(combinedReducers) {
   return [state, dispatch];
 };
 
+var mapToAction = function mapToAction(action) {
+  return function (fn) {
+    if (typeof fn === "function") {
+      return fn(action);
+    }
+
+    return function () {
+      return {};
+    };
+  };
+};
+
 var Provider = function Provider(_ref) {
   var children = _ref.children,
       store = _ref.store;
 
-  var _useCombinedReducers = useCombinedReducers(store),
-      _useCombinedReducers2 = _slicedToArray(_useCombinedReducers, 2),
-      state = _useCombinedReducers2[0],
-      dispatch = _useCombinedReducers2[1];
+  var _combineReducers = combineReducers(store),
+      _combineReducers2 = _slicedToArray(_combineReducers, 2),
+      state = _combineReducers2[0],
+      dispatch = _combineReducers2[1];
 
   return /*#__PURE__*/_react.default.createElement(DispatchContext.Provider, {
     value: dispatch
@@ -28440,42 +28452,43 @@ var Provider = function Provider(_ref) {
 
 exports.Provider = Provider;
 
-var useConnect = function useConnect(Component) {
-  var Connect = function Connect(_ref2) {
-    var rest = Object.assign({}, _ref2);
-    return /*#__PURE__*/_react.default.createElement(DispatchConsumer, null, function (dispatch) {
-      return /*#__PURE__*/_react.default.createElement(StateConsumer, null, function (state) {
-        return /*#__PURE__*/_react.default.createElement(Component, _extends({
-          store: state,
-          dispatch: dispatch
-        }, rest));
+var connect = function connect() {
+  var stateProps = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+  var dispatchProps = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+  return function (Component) {
+    var Connect = function Connect(_ref2) {
+      var rest = Object.assign({}, _ref2);
+      return /*#__PURE__*/_react.default.createElement(DispatchConsumer, null, function (dispatch) {
+        return /*#__PURE__*/_react.default.createElement(StateConsumer, null, function (state) {
+          return /*#__PURE__*/_react.default.createElement(Component, _extends({}, rest, mapToAction(state)(stateProps), mapToAction(dispatch)(dispatchProps)));
+        });
       });
-    });
-  };
+    };
 
-  return /*#__PURE__*/function (_React$Component) {
-    _inherits(_class, _React$Component);
+    return /*#__PURE__*/function (_React$PureComponent) {
+      _inherits(_class, _React$PureComponent);
 
-    var _super = _createSuper(_class);
+      var _super = _createSuper(_class);
 
-    function _class() {
-      _classCallCheck(this, _class);
+      function _class() {
+        _classCallCheck(this, _class);
 
-      return _super.apply(this, arguments);
-    }
-
-    _createClass(_class, [{
-      key: "render",
-      value: function render() {
-        return /*#__PURE__*/_react.default.createElement(Connect, this.props);
+        return _super.apply(this, arguments);
       }
-    }]);
 
-    return _class;
-  }(_react.default.Component);
+      _createClass(_class, [{
+        key: "render",
+        value: function render() {
+          return /*#__PURE__*/_react.default.createElement(Connect, this.props);
+        }
+      }]);
+
+      return _class;
+    }(_react.default.PureComponent);
+  };
 };
 
-exports.useConnect = useConnect;
+exports.connect = connect;
 },{"react":"../node_modules/react/index.js"}],"containers/Right.js":[function(require,module,exports) {
 "use strict";
 
@@ -28492,21 +28505,34 @@ var _reducers = require("../reducers");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var RightContainer = _react.default.memo(function (props) {
+var RightContainer = function RightContainer(_ref) {
+  var dispatchAddAction = _ref.dispatchAddAction,
+      dispatchSubstractAction = _ref.dispatchSubstractAction;
   return /*#__PURE__*/_react.default.createElement("div", {
     className: "view-container right-container"
   }, /*#__PURE__*/_react.default.createElement("button", {
     onClick: function onClick() {
-      return props.dispatch((0, _reducers.addAction)(1));
+      return dispatchAddAction(1);
     }
   }, "ADD"), /*#__PURE__*/_react.default.createElement("button", {
     onClick: function onClick() {
-      return props.dispatch((0, _reducers.substractAction)(1));
+      return dispatchSubstractAction(1);
     }
   }, "SUBSTRACT"));
-});
+};
 
-var _default = (0, _src.useConnect)(RightContainer);
+var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+  return {
+    dispatchAddAction: function dispatchAddAction(number) {
+      return dispatch((0, _reducers.addAction)(number));
+    },
+    dispatchSubstractAction: function dispatchSubstractAction(number) {
+      return dispatch((0, _reducers.substractAction)(number));
+    }
+  };
+};
+
+var _default = (0, _src.connect)(null, mapDispatchToProps)(RightContainer);
 
 exports.default = _default;
 },{"react":"../node_modules/react/index.js","../../src":"../src/index.js","../reducers":"reducers/index.js"}],"containers/Left.js":[function(require,module,exports) {
@@ -28523,13 +28549,20 @@ var _src = require("../../src");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var LeftContainer = _react.default.memo(function (props) {
+var LeftContainer = function LeftContainer(_ref) {
+  var counter = _ref.counter;
   return /*#__PURE__*/_react.default.createElement("div", {
     className: "view-container letf-container"
-  }, /*#__PURE__*/_react.default.createElement("span", null, props.store.test.counter, " "));
-});
+  }, /*#__PURE__*/_react.default.createElement("span", null, counter, " "));
+};
 
-var _default = (0, _src.useConnect)(LeftContainer);
+var mapStateToProps = function mapStateToProps(state) {
+  return {
+    counter: state.test.counter
+  };
+};
+
+var _default = (0, _src.connect)(mapStateToProps, null)(LeftContainer);
 
 exports.default = _default;
 },{"react":"../node_modules/react/index.js","../../src":"../src/index.js"}],"../node_modules/parcel/src/builtins/bundle-url.js":[function(require,module,exports) {
@@ -28683,7 +28716,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62906" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50581" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -1,12 +1,14 @@
 import React from "react";
-import { useConnect } from "../../src";
+import { connect } from "../../src";
 
-const LeftContainer = React.memo((props) => {
+const LeftContainer = ({ counter }) => {
   return (
     <div className="view-container letf-container">
-      <span>{props.store.test.counter} </span>
+      <span>{counter} </span>
     </div>
   );
-});
+};
 
-export default useConnect(LeftContainer);
+const mapStateToProps = (state) => ({ counter: state.test.counter });
+
+export default connect(mapStateToProps, null)(LeftContainer);

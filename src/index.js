@@ -1,11 +1,11 @@
-import React, { useContext, createContext } from "react";
+import React, { createContext } from "react";
 
 const StateContext = createContext();
 const StateConsumer = StateContext.Consumer;
 const DispatchContext = createContext();
 const DispatchConsumer = DispatchContext.Consumer;
 
-const useCombinedReducers = (combinedReducers) => {
+const combineReducers = (combinedReducers) => {
   const state = Object.keys(combinedReducers).reduce(
     (acc, key) => ({ ...acc, [key]: combinedReducers[key][0] }),
     {}
@@ -17,8 +17,15 @@ const useCombinedReducers = (combinedReducers) => {
   return [state, dispatch];
 };
 
+const mapToAction = (action) => (fn) => {
+  if (typeof fn === "function") {
+    return fn(action);
+  }
+  return () => ({});
+};
+
 const Provider = ({ children, store }) => {
-  const [state, dispatch] = useCombinedReducers(store);
+  const [state, dispatch] = combineReducers(store);
 
   return (
     <DispatchContext.Provider value={dispatch}>
@@ -27,25 +34,28 @@ const Provider = ({ children, store }) => {
   );
 };
 
-const useConnect = (Component) => {
-  const Connect = ({ ...rest }) => {
-    return (
-      <DispatchConsumer>
-        {(dispatch) => (
-          <StateConsumer>
-            {(state) => (
-              <Component store={state} dispatch={dispatch} {...rest} />
-            )}
-          </StateConsumer>
-        )}
-      </DispatchConsumer>
-    );
-  };
-  return class extends React.Component {
+const connect = (stateProps = null, dispatchProps = null) => (Component) => {
+  const Connect = ({ ...rest }) => (
+    <DispatchConsumer>
+      {(dispatch) => (
+        <StateConsumer>
+          {(state) => (
+            <Component
+              {...rest}
+              {...mapToAction(state)(stateProps)}
+              {...mapToAction(dispatch)(dispatchProps)}
+            />
+          )}
+        </StateConsumer>
+      )}
+    </DispatchConsumer>
+  );
+
+  return class extends React.PureComponent {
     render() {
       return <Connect {...this.props} />;
     }
   };
 };
 
-export { Provider, useConnect };
+export { Provider, connect };
