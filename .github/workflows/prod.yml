@@ -1,41 +1,28 @@
-name: Node CI
-
+name: Publish
 on:
-  push:
-    branches:
-      - master
-
+  release:
+    types:
+      - created
 jobs:
-  build:
+  main:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [8.x, 10.x, 12.x]
-
     steps:
       - uses: actions/checkout@v1
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+      - uses: actions/setup-node@v1
         with:
-          node-version: ${{ matrix.node-version }}
-      - name: npm / registry setup
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 10
           registry-url: https://npm.pkg.github.com
-          scope: "@imenesesl"
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GIT_TOKEN }}
-      - name: npm install, build, and test
+          scope: "@okuryu"
+      - name: npm publish
         run: |
           npm install
-          npm run build --if-present
-        env:
-          CI: true
-          NODE_AUTH_TOKEN: ${{ secrets.GIT_TOKEN }}
-      - name: npm try to publish the package if it's a new version
-        continue-on-error: true
-        run: npm publish
+          npm run build
+          LATEST=`npm view . version`
+          CURRENT=`cat package.json | jq -r .version`
+          if [ "$LATEST" != "$CURRENT" ]
+          then
+            npm ci
+            npm publish
+          fi
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GIT_TOKEN }}
