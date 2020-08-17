@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.useConnect = exports.Provider = void 0;
+exports.connect = exports.Provider = void 0;
 
 var _react = _interopRequireWildcard(require("react"));
 
@@ -23,7 +23,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-function _createSuper(Derived) { return function () { var Super = _getPrototypeOf(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
@@ -39,7 +39,7 @@ function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArra
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
@@ -53,14 +53,14 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-var StateContext = (0, _react.createContext)();
+var StateContext = /*#__PURE__*/(0, _react.createContext)();
 var StateConsumer = StateContext.Consumer;
-var DispatchContext = (0, _react.createContext)();
+var DispatchContext = /*#__PURE__*/(0, _react.createContext)();
 var DispatchConsumer = DispatchContext.Consumer;
 
-var useCombinedReducers = function useCombinedReducers(combinedReducers) {
+var combineReducers = function combineReducers(combinedReducers) {
   var state = Object.keys(combinedReducers).reduce(function (acc, key) {
-    return _objectSpread({}, acc, _defineProperty({}, key, combinedReducers[key][0]));
+    return _objectSpread(_objectSpread({}, acc), {}, _defineProperty({}, key, combinedReducers[key][0]));
   }, {});
 
   var dispatch = function dispatch(action) {
@@ -74,14 +74,26 @@ var useCombinedReducers = function useCombinedReducers(combinedReducers) {
   return [state, dispatch];
 };
 
+var mapToAction = function mapToAction(action) {
+  return function (fn) {
+    if (typeof fn === "function") {
+      return fn(action);
+    }
+
+    return function () {
+      return {};
+    };
+  };
+};
+
 var Provider = function Provider(_ref) {
   var children = _ref.children,
       store = _ref.store;
 
-  var _useCombinedReducers = useCombinedReducers(store),
-      _useCombinedReducers2 = _slicedToArray(_useCombinedReducers, 2),
-      state = _useCombinedReducers2[0],
-      dispatch = _useCombinedReducers2[1];
+  var _combineReducers = combineReducers(store),
+      _combineReducers2 = _slicedToArray(_combineReducers, 2),
+      state = _combineReducers2[0],
+      dispatch = _combineReducers2[1];
 
   return /*#__PURE__*/_react["default"].createElement(DispatchContext.Provider, {
     value: dispatch
@@ -92,40 +104,41 @@ var Provider = function Provider(_ref) {
 
 exports.Provider = Provider;
 
-var useConnect = function useConnect(Component) {
-  var Connect = function Connect(_ref2) {
-    var rest = _extends({}, _ref2);
+var connect = function connect() {
+  var stateProps = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+  var dispatchProps = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+  return function (Component) {
+    var Connect = function Connect(_ref2) {
+      var rest = _extends({}, _ref2);
 
-    return /*#__PURE__*/_react["default"].createElement(DispatchConsumer, null, function (dispatch) {
-      return /*#__PURE__*/_react["default"].createElement(StateConsumer, null, function (state) {
-        return /*#__PURE__*/_react["default"].createElement(Component, _extends({
-          store: state,
-          dispatch: dispatch
-        }, rest));
+      return /*#__PURE__*/_react["default"].createElement(DispatchConsumer, null, function (dispatch) {
+        return /*#__PURE__*/_react["default"].createElement(StateConsumer, null, function (state) {
+          return /*#__PURE__*/_react["default"].createElement(Component, _extends({}, rest, mapToAction(state)(stateProps), mapToAction(dispatch)(dispatchProps)));
+        });
       });
-    });
-  };
+    };
 
-  return /*#__PURE__*/function (_React$Component) {
-    _inherits(_class, _React$Component);
+    return /*#__PURE__*/function (_React$PureComponent) {
+      _inherits(_class, _React$PureComponent);
 
-    var _super = _createSuper(_class);
+      var _super = _createSuper(_class);
 
-    function _class() {
-      _classCallCheck(this, _class);
+      function _class() {
+        _classCallCheck(this, _class);
 
-      return _super.apply(this, arguments);
-    }
-
-    _createClass(_class, [{
-      key: "render",
-      value: function render() {
-        return /*#__PURE__*/_react["default"].createElement(Connect, this.props);
+        return _super.apply(this, arguments);
       }
-    }]);
 
-    return _class;
-  }(_react["default"].Component);
+      _createClass(_class, [{
+        key: "render",
+        value: function render() {
+          return /*#__PURE__*/_react["default"].createElement(Connect, this.props);
+        }
+      }]);
+
+      return _class;
+    }(_react["default"].PureComponent);
+  };
 };
 
-exports.useConnect = useConnect;
+exports.connect = connect;

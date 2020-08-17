@@ -1,6 +1,6 @@
 {
   "name": "@imenesesl/sagittariux",
-  "version": "2.1.4",
+  "version": "2.2.0",
   "description": "Sagittarius is inspired by Redux, it is an open source React library to manage the state of the application through API-Context",
   "main": "index.js",
   "scripts": {
@@ -9,12 +9,9 @@
     "build": "./node_modules/.bin/babel src --out-file index.js",
     "deploy": "npm run build && npm publish --access public"
   },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/@imenesesl"
-  },
   "repository": {
     "type": "git",
-    "url": "git://github.com/imenesesl/sagittariux.git"
+    "url": "git+https://github.com/imenesesl/sagittariux.git"
   },
   "keywords": [
     "sagittariux",
@@ -32,10 +29,10 @@
     "react-dom": "^16.13.1"
   },
   "dependencies": {
-    "@babel/cli": "^7.8.4",
-    "@babel/core": "^7.8.4",
-    "@babel/preset-env": "^7.8.4",
-    "@babel/preset-react": "^7.8.4",
+    "@babel/cli": "^7.10.5",
+    "@babel/core": "^7.11.1",
+    "@babel/preset-env": "^7.11.0",
+    "@babel/preset-react": "^7.10.4",
     "react": "^16.13.1",
     "react-dom": "^16.13.1"
   },
