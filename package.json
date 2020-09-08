@@ -1,6 +1,6 @@
 {
 	"name": "sagittariux",
-	"version": "2.2.0",
+	"version": "3.0.0",
 	"description": "Sagittarius is inspired by Redux, it is an open source React library to manage the state of the application through API-Context",
 	"source": "src/sagittariux.tsx",
 	"main": "dist/sagittariux.js",
@@ -13,7 +13,8 @@
 		"format": "prettier --write '**'",
 		"demo": "parcel demo/index.html --out-dir demo/dist",
 		"build": "rm -rf dist && microbundle --external react --globals react=React --strict --no-compress",
-		"test": "ava"
+		"test": "ava",
+		"deploy": "npm run build && npm publish --access public"
 	},
 	"keywords": [],
 	"author": "",
