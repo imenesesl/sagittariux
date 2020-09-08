@@ -2,7 +2,7 @@
 	"name": "sagittariux",
 	"version": "3.0.0",
 	"description": "Sagittarius is inspired by Redux, it is an open source React library to manage the state of the application through API-Context",
-	"source": "src/sagittariux.tsx",
+	"source": "src/sagittariux.ts",
 	"main": "dist/sagittariux.js",
 	"module": "dist/sagittariux.mjs",
 	"unpkg": "dist/sagittariux.umd.js",

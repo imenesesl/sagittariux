@@ -7,7 +7,7 @@ export const connect = (
 	stateProps: (state: Reducers) => Object,
 	dispatchProps: Dispatch,
 ) => (Component: any) => {
-	const Connect = ({ ...rest }) => (
+	const Connect = ({ ...rest }): JSX.Element => (
 		<DispatchConsumer>
 			{(dispatch: Action) => (
 				<StateConsumer>
