@@ -1,42 +1,47 @@
 {
-  "name": "sagittariux",
-  "version": "2.2.0",
-  "description": "Sagittarius is inspired by Redux, it is an open source React library to manage the state of the application through API-Context",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "demo": "parcel demo/index.html",
-    "build": "./node_modules/.bin/babel src --out-file index.js",
-    "deploy": "npm run build && npm publish --access public"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/imenesesl/sagittariux.git"
-  },
-  "keywords": [
-    "sagittariux",
-    "redux",
-    "context"
-  ],
-  "author": "Luis Meneses",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/imenesesl/sagittariux/issues"
-  },
-  "homepage": "https://github.com/imenesesl/sagittariux#readme",
-  "peerDependencies": {
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1"
-  },
-  "dependencies": {
-    "@babel/cli": "^7.10.5",
-    "@babel/core": "^7.11.1",
-    "@babel/preset-env": "^7.11.0",
-    "@babel/preset-react": "^7.10.4",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1"
-  },
-  "devDependencies": {
-    "parcel": "^1.12.4"
-  }
+	"name": "sagittariux",
+	"version": "3.0.0",
+	"description": "Sagittarius is inspired by Redux, it is an open source React library to manage the state of the application through API-Context",
+	"source": "src/sagittariux.tsx",
+	"main": "dist/sagittariux.js",
+	"module": "dist/sagittariux.mjs",
+	"unpkg": "dist/sagittariux.umd.js",
+	"types": "dist/sagittariux.d.ts",
+	"amdName": "sagittariux",
+	"sideEffects": false,
+	"scripts": {
+		"format": "prettier --write '**'",
+		"demo": "parcel demo/index.html --out-dir demo/dist",
+		"build": "rm -rf dist && microbundle --external react --globals react=React --strict --no-compress",
+		"test": "ava",
+		"deploy": "npm run build && npm publish --access public"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "MIT",
+	"devDependencies": {
+		"@types/react": "^16.8.15",
+		"@types/react-dom": "^16.8.4",
+		"ava": "^1.4.1",
+		"husky": "^2.1.0",
+		"lint-staged": "^8.1.5",
+		"microbundle": "^0.11.0",
+		"parcel": "^1.12.3",
+		"prettier": "^1.17.0",
+		"react": "^16.8.6",
+		"react-dom": "^16.8.6",
+		"ts-node": "^8.1.0",
+		"typescript": "^3.4.5"
+	},
+	"husky": {
+		"hooks": {
+			"pre-commit": "lint-staged"
+		}
+	},
+	"lint-staged": {
+		"*": [
+			"prettier --write",
+			"git add"
+		]
+	}
 }
